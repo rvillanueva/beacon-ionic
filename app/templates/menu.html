@@ -1,0 +1,30 @@
+<ion-side-menus>
+
+  <ion-pane ion-side-menu-content>
+    <ion-nav-bar class="bar-stable">
+      <ion-nav-back-button class="button-clear"><i class="icon ion-ios7-arrow-back"></i> Back</ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-nav-view name="menuContent" animation="slide-left-right"></ion-nav-view>
+  </ion-pane>
+
+  <ion-side-menu side="left">
+    <ion-content>
+      <div class="item item-avatar">
+        <img src="">
+        <h2>Marty McFly</h2>
+        <p>Ready</p>
+      </div>
+      <ion-list>
+        <ion-item nav-clear menu-close href="#/app/dashboard">
+          Mission Control
+        </ion-item>
+        <ion-item nav-clear menu-close href="#/app/profile">
+          Profile
+        </ion-item>
+        <ion-item nav-clear menu-close href="#/app/requests">
+          Requests
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-side-menu>
+</ion-side-menus>

@@ -1,0 +1,36 @@
+<ion-view title="Profile">
+  <ion-nav-buttons side="left">
+    <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+  </ion-nav-buttons>
+  <ion-content class="has-header">
+    <div class="list card">
+
+      <div class="item item-avatar">
+        <img src="">
+        <h2>Marty McFly</h2>
+        <p>{{role}}</p>
+      </div>
+
+    </div>
+
+    <div class="list">
+      <label class="item item-input item-floating-label">
+        <span class="input-label">Role</span>
+        <input type="text" placeholder="Role" ng-model="role">
+      </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label">Location</span>
+        <input type="text" placeholder="Location" ng-model="location">
+      </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label">About Me</span>
+        <textarea placeholder="A little bit about me..." rows="4"></textarea>
+      </label>
+    </div>
+    <div class="padding">
+      <button class="button button-block button-positive">
+       Save
+      </button>
+    </div>
+  </ion-content>
+</ion-view>
