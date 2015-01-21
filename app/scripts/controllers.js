@@ -35,6 +35,23 @@ angular.module('Beacon.controllers', [])
 })
 
 .controller('HomeCtrl', function($scope) {
+  $scope.beacon = false;
+  if ($scope.beacon){
+    $scope.beaconStyle = 'button-positive';
+  } else {
+    $scope.beaconStyle = 'button-light';
+  }
+  $scope.firstResponder = function(){
+  };
+  $scope.toggleResponder = function(){
+    if ($scope.beacon){
+      $scope.beacon = false;
+      $scope.beaconStyle = 'button-light';
+    } else if (!$scope.beacon){
+      $scope.beacon = true;
+      $scope.beaconStyle = 'button-positive';
+    }
+  }
 })
 
 .controller('ProfileCtrl', function($scope) {
@@ -52,4 +69,20 @@ angular.module('Beacon.controllers', [])
 })
 
 .controller('RequestCtrl', function($scope, $stateParams) {
+})
+
+.controller('AddRequestCtrl', function($scope, apiFactory) {
+  $scope.request ={
+    status: 'open',
+    created: new Date().getTime(),
+    // Should really be server-assigned
+    hours: 1
+  };
+  $scope.industryKey = apiFactory.traitKey('industry');
+  $scope.serviceKey = apiFactory.traitKey('service');
+  $scope.submit = function(){
+    console.log($scope.requestName)
+    console.log($scope.request)
+    apiFactory.addRequest($scope.request);
+  }
 });

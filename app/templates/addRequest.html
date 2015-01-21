@@ -1,0 +1,64 @@
+<ion-view title="Adding Request">
+  <ion-content class="has-header">
+    <div class="list">
+      <label class="item item-input">
+        <span class="input-label">Request</span>
+        <input type="text" ng-model="request.name" placeholder="Save ten kittens from trees">
+      </label>
+      <label class="item item-input">
+        <span class="input-label">Description</span>
+        <textarea ng-model="request.desc" placeholder="A more detailed description..." rows="4"></textarea>
+      </label>
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Hours
+        </div>
+        <select ng-model="request.hours">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+          <option value="11">11</option>
+          <option value="12">12</option>
+        </select>
+      </label>
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Industry
+        </div>
+        <select ng-model="request.traits.industry.id" ng-options="key as industry.name for (key, industry) in industryKey">
+          <option value="">Cross-Industry</option>
+        </select>
+      </label>
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Service Line
+        </div>
+        <select ng-model="request.traits.service.id" ng-options="key as service.name for (key, service) in serviceKey">
+          <option value="">Cross-Service Line</option>
+        </select>
+      </label>
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Skill #1
+        </div>
+        <select ng-model="request.traits.service.id" ng-options="key as service.name for (key, service) in serviceKey">
+          <option value="">Cross-Service Line</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+    <div class="padding">
+      <button class="button button-block button-positive" ng-click="submit()">
+        Let's Go!
+      </button>
+    </div>
+  </ion-content>
+</ion-view>

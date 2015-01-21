@@ -6,7 +6,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('Beacon', ['ionic', 'config', 'Beacon.controllers'])
+angular.module('Beacon', ['ionic', 'config', 'Beacon.controllers','firebase'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -67,6 +67,16 @@ angular.module('Beacon', ['ionic', 'config', 'Beacon.controllers'])
         'menuContent' :{
           templateUrl: 'templates/request.html',
           controller: 'RequestCtrl'
+        }
+      }
+    })
+
+    .state('app.addRequest', {
+      url: '/addRequest',
+      views: {
+        'menuContent' :{
+          templateUrl: 'templates/addRequest.html',
+          controller: 'AddRequestCtrl'
         }
       }
     });

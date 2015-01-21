@@ -1,17 +1,17 @@
-<ion-view title="Browse">
+<ion-view title="Mission Control">
   <ion-nav-buttons side="left">
     <button menu-toggle="left"class="button button-icon icon ion-navicon"></button>
   </ion-nav-buttons>
   <ion-content class="has-header">
     <div class="row row-center centered">
       <div class="col col-center">
-        I am <button class="button button-light">
-          not ready
+        I am <button class="button" ng-class="beaconStyle" ng-click="toggleResponder()">
+          {{beacon === true ? 'ready' : 'not ready'}}
         </button> to help<br><br>
         Need help?<br><br>
-        <button class="button button-positive">
+        <a href="#/app/addRequest"><button class="button button-positive">
           <i class="icon ion-fireball"></i> Light Beacon
-        </button>
+        </button></a>
       </div>
     </div>
   </ion-content>
