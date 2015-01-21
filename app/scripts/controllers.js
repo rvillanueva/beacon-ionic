@@ -57,7 +57,7 @@ angular.module('Beacon.controllers', [])
 .controller('ProfileCtrl', function($scope) {
 })
 
-.controller('RequestsCtrl', function($scope) {
+.controller('RequestsCtrl', function($scope, $filter, apiFactory) {
   $scope.requests = [
 { title: 'Rescue kitten from tree', id: 1 },
 { title: 'Locate Timmy (check well)', id: 2 },
@@ -66,6 +66,14 @@ angular.module('Beacon.controllers', [])
 { title: 'See Auntie May', id: 5 },
 { title: 'Buy eggs', id: 6 }
   ];
+
+  $scope.requests = apiFactory.myRequests();
+
+  $scope.requestFilter = function (item) {
+    return item
+    //(item.name.indexOf('it') != -1 && item.status == 'open');
+  };
+
 })
 
 .controller('RequestCtrl', function($scope, $stateParams) {

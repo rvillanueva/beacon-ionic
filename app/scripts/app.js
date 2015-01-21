@@ -6,7 +6,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('Beacon', ['ionic', 'config', 'Beacon.controllers','firebase'])
+angular.module('Beacon', ['ionic', 'config', 'Beacon.controllers','Beacon.filters','firebase'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -80,6 +80,7 @@ angular.module('Beacon', ['ionic', 'config', 'Beacon.controllers','firebase'])
         }
       }
     });
+
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/home');
 });

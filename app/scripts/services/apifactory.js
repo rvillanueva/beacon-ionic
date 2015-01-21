@@ -41,7 +41,11 @@ angular.module('Beacon')
       },
       myRequests: function(){
         //need to filter for owned
-        return '';
+        var userId = 1;
+        var sync = $firebase(ref.child('requests').orderByChild('requestorId').equalTo(userId));
+        var myRequests = sync.$asArray();
+
+        return myRequests;
       },
       addRequest: function(request){
         //push new project and request key
@@ -59,15 +63,6 @@ angular.module('Beacon')
       },
       rankProfiles: function(project){
         //rank rankProfile across all profiles
-        return 'Error';
-      },
-      rankProject: function(profile){
-        //for each project, match
-        // industry prefs, service prefs, skill prefs, location prefs
-        return 'Error';
-      },
-      rankProjects: function(profile){
-        //run rankProject for all projects
         return 'Error';
       }
     };
