@@ -49,13 +49,26 @@ angular.module('Beacon.controllers', [])
     });
   };
 
-  // Perform the login action when the user submits the login form
-//  $scope.doLogin = function() {
-//    AuthService.login($scope.loginData)
-//    $timeout(function() {
-//      $scope.closeLogin();
-//    }, 1000);
-//  }
+  // Form data for the login modal
+  $scope.loginData = {};
+
+  // Create the login modal that we will use later
+  $ionicModal.fromTemplateUrl('templates/addRequest.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.beaconModal = modal;
+  });
+
+  // Triggered in the login modal to close it
+  $scope.closeBeacon = function() {
+    $scope.beaconModal.hide();
+  },
+
+  // Open the login modal
+  $scope.addBeacon = function() {
+    $scope.beaconModal.show();
+    console.log('showing modal')
+  };
 
 })
 
@@ -108,6 +121,7 @@ angular.module('Beacon.controllers', [])
     console.log($scope.requestName);
     console.log($scope.request);
     apiFactory.addRequest($scope.request);
+    $scope.beaconModal.hide();
     $location.path('/app/requesting');
   }
 })
