@@ -22,6 +22,22 @@ angular.module('Beacon', ['ionic', 'config', 'Beacon.controllers','Beacon.filter
   });
 })
 
+.constant('AUTH_EVENTS', {
+  loginSuccess: 'auth-login-success',
+  loginFailed: 'auth-login-failed',
+  logoutSuccess: 'auth-logout-success',
+  sessionTimeout: 'auth-session-timeout',
+  notAuthenticated: 'auth-not-authenticated',
+  notAuthorized: 'auth-not-authorized'
+})
+
+.constant('USER_ROLES', {
+  all: '*',
+  admin: 'admin',
+  editor: 'editor',
+  guest: 'guest'
+})
+
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider
 
@@ -77,6 +93,25 @@ angular.module('Beacon', ['ionic', 'config', 'Beacon.controllers','Beacon.filter
         'menuContent' :{
           templateUrl: 'templates/addRequest.html',
           controller: 'AddRequestCtrl'
+        }
+      }
+    })
+    .state('app.requesting', {
+      url: '/requesting',
+      views: {
+        'menuContent' :{
+          templateUrl: 'templates/requesting.html',
+          controller: 'RequestingCtrl'
+        }
+      }
+    })
+
+    .state('app.login', {
+      url: '/login',
+      views: {
+        'menuContent' :{
+          templateUrl: 'templates/login.html',
+          controller: 'LoginCtrl'
         }
       }
     });

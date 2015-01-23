@@ -1,7 +1,17 @@
 'use strict';
 angular.module('Beacon.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, USER_ROLES,
+  AuthService, $location, $rootScope, AUTH_EVENTS) {
+
+  $scope.currentUser = null;
+  $scope.userRoles = USER_ROLES;
+
+  $scope.setCurrentUser = function (user) {
+    $scope.currentUser = user;
+    console.log('current user set as ' + user)
+  };
+
   // Form data for the login modal
   $scope.loginData = {};
 
@@ -22,19 +32,34 @@ angular.module('Beacon.controllers', [])
     $scope.modal.show();
   };
 
-  // Perform the login action when the user submits the login form
-  $scope.doLogin = function() {
-    console.log('Doing login', $scope.loginData);
+  $scope.credentials = {
+    username: '',
+    password: ''
+  };
 
-    // Simulate a login delay. Remove this and replace with your login
-    // code if using a login system
-    $timeout(function() {
-      $scope.closeLogin();
-    }, 1000);
-  }
+  $scope.doLogin = function (credentials) {
+    AuthService.login($scope.loginData)
+    .then(function(user) {
+      $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
+      $scope.setCurrentUser(user);
+      $scope.modal.hide();
+    }, function (error) {
+      $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+      console.log('failed')
+    });
+  };
+
+  // Perform the login action when the user submits the login form
+//  $scope.doLogin = function() {
+//    AuthService.login($scope.loginData)
+//    $timeout(function() {
+//      $scope.closeLogin();
+//    }, 1000);
+//  }
+
 })
 
-.controller('HomeCtrl', function($scope) {
+.controller('HomeCtrl', function($scope, apiFactory) {
   $scope.beacon = false;
   if ($scope.beacon){
     $scope.beaconStyle = 'button-positive';
@@ -47,39 +72,30 @@ angular.module('Beacon.controllers', [])
     if ($scope.beacon){
       $scope.beacon = false;
       $scope.beaconStyle = 'button-light';
+      apiFactory.ready('false');
     } else if (!$scope.beacon){
       $scope.beacon = true;
       $scope.beaconStyle = 'button-positive';
+      apiFactory.ready('true');
     }
   }
+})
+
+.controller('LoginCtrl', function ($scope) {
 })
 
 .controller('ProfileCtrl', function($scope) {
 })
 
 .controller('RequestsCtrl', function($scope, $filter, apiFactory) {
-  $scope.requests = [
-{ title: 'Rescue kitten from tree', id: 1 },
-{ title: 'Locate Timmy (check well)', id: 2 },
-{ title: 'Save Gotham', id: 3 },
-{ title: 'Receive key to the city', id: 4 },
-{ title: 'See Auntie May', id: 5 },
-{ title: 'Buy eggs', id: 6 }
-  ];
-
   $scope.requests = apiFactory.myRequests();
-
-  $scope.requestFilter = function (item) {
-    return item
-    //(item.name.indexOf('it') != -1 && item.status == 'open');
-  };
-
 })
 
-.controller('RequestCtrl', function($scope, $stateParams) {
+.controller('RequestCtrl', function($scope) {
 })
 
-.controller('AddRequestCtrl', function($scope, apiFactory) {
+
+.controller('AddRequestCtrl', function($scope, $location, apiFactory) {
   $scope.request ={
     status: 'open',
     created: new Date().getTime(),
@@ -89,8 +105,11 @@ angular.module('Beacon.controllers', [])
   $scope.industryKey = apiFactory.traitKey('industry');
   $scope.serviceKey = apiFactory.traitKey('service');
   $scope.submit = function(){
-    console.log($scope.requestName)
-    console.log($scope.request)
+    console.log($scope.requestName);
+    console.log($scope.request);
     apiFactory.addRequest($scope.request);
+    $location.path('/app/requesting');
   }
+})
+.controller('RequestingCtrl', function($scope) {
 });

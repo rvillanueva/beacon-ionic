@@ -13,15 +13,17 @@ angular.module('Beacon')
     var ref = new Firebase("https://ibmbeacon.firebaseio.com/");
 
     // Public API here
+    // Dev Team: will need to rewrite for IBM backend
     return {
       users: function () {
         // Returns a list of all user unique ids
-
         return '';
       },
       user: function (id) {
-        // Returns all info for a user
-        return '';
+        // Returns all data for a user
+        var sync = $firebase(ref.child('user').child(id));
+        var user = sync.$asObject();
+        return user;
       },
       projects: function () {
         // Returns a list of all project names
@@ -50,9 +52,10 @@ angular.module('Beacon')
       addRequest: function(request){
         //push new project and request key
         //return key
-        ref.child('requests').push(request)
-        console.log('sent')
-        return 'Sent';
+        var newRequest = ref.child('requests').push(request)
+        var newRequestId = newRequest.key();
+        console.log(newRequestId)
+        return newRequestId;
       },
       saveProfile: function(){
         return 'Saved';
@@ -64,6 +67,12 @@ angular.module('Beacon')
       rankProfiles: function(project){
         //rank rankProfile across all profiles
         return 'Error';
-      }
+      },
+      ready: function(toggle){
+        // Readies individual profile to accept requests
+        var userId = 'uid'; //change to rootscope user
+        ref.child('users').child(userId).child('profile').child('ready').set(toggle);
+        console.log('Readiness set to ' + toggle);
+      },
     };
   });
