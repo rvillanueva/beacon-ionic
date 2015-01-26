@@ -7,8 +7,8 @@
 
       <div class="item item-avatar">
         <img src="">
-        <h2>Marty McFly</h2>
-        <p>{{role}}</p>
+        <h2>{{profile.name}}</h2>
+        <p>{{profile.role}}</p>
       </div>
 
     </div>
@@ -16,19 +16,19 @@
     <div class="list">
       <label class="item item-input">
         <span class="input-label">Role</span>
-        <input type="text" placeholder="Agent of Awesome" ng-model="role">
+        <input type="text" placeholder="Agent of Awesome" ng-model="profile.role">
       </label>
       <label class="item item-input">
         <span class="input-label">Location</span>
-        <input type="text" placeholder="The Batcave" ng-model="location">
+        <input type="text" placeholder="The Batcave" ng-model="profile.location">
       </label>
       <label class="item item-input">
         <span class="input-label">About Me</span>
-        <textarea placeholder="A little bit about me..." rows="4"></textarea>
+        <textarea placeholder="A little bit about me..." rows="4" ng-model="profile.about"></textarea>
       </label>
     </div>
     <div class="padding">
-      <button class="button button-block button-positive">
+      <button class="button button-block button-positive" ng-click="save">
        Save
       </button>
     </div>

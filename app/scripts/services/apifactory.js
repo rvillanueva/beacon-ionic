@@ -8,7 +8,7 @@
  * Factory in the beaconApp.
  */
 angular.module('Beacon')
-  .factory('apiFactory', function ($rootScope, $firebase) {
+  .factory('apiFactory', function ($rootScope, $firebase, AuthService, beaconFactory) {
 
     var ref = new Firebase("https://ibmbeacon.firebaseio.com/");
 
@@ -43,22 +43,42 @@ angular.module('Beacon')
       },
       myRequests: function(){
         //need to filter for owned
-        var userId = 1;
-        var sync = $firebase(ref.child('requests').orderByChild('requestorId').equalTo(userId));
-        var myRequests = sync.$asArray();
+        console.log(AuthService.isAuthenticated());
+        if (AuthService.isAuthenticated() !== null){
+          var userId = $rootScope.currentUser;
+          var sync = $firebase(ref.child('requests').orderByChild('requestorId').equalTo(userId));
+          var myRequests = sync.$asArray();
+          console.log('Requests retrieved')
+        } else {
+          console.log('Error retrieving requests.')
+          return 'Error retrieving requests.';
+        }
 
         return myRequests;
       },
       addRequest: function(request){
         //push new project and request key
         //return key
-        var newRequest = ref.child('requests').push(request)
+        request.requestorId = $rootScope.currentUser;
+        var newRequest = ref.child('requests').push(request);
         var newRequestId = newRequest.key();
         console.log(newRequestId)
+        beaconFactory.request(request)
         return newRequestId;
       },
-      saveProfile: function(){
-        return 'Saved';
+      getProfile: function(){
+        if (AuthService.isAuthenticated() !== null){
+          var userId = $rootScope.currentUser;
+          var sync = $firebase(ref.child('users').child(userId).child('profile'));
+          var profile = sync.$asObject();
+          return profile;
+        } else {
+          return 'Error getting profile'
+        }
+      },
+      saveProfile: function(data){
+        var userId = $rootScope.currentUser;
+        ref.child('users').child(userId).child('profile').set(data)
       },
       rankProfile: function(project){
         //write matching function here
@@ -70,7 +90,7 @@ angular.module('Beacon')
       },
       ready: function(toggle){
         // Readies individual profile to accept requests
-        var userId = 'uid'; //change to rootscope user
+        var userId = $rootScope.currentUser; //change to rootscope user
         ref.child('users').child(userId).child('profile').child('ready').set(toggle);
         console.log('Readiness set to ' + toggle);
       },

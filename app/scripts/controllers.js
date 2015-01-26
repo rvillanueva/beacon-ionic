@@ -4,13 +4,22 @@ angular.module('Beacon.controllers', [])
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, USER_ROLES,
   AuthService, $location, $rootScope, AUTH_EVENTS) {
 
-  $scope.currentUser = null;
   $scope.userRoles = USER_ROLES;
 
-  $scope.setCurrentUser = function (user) {
-    $scope.currentUser = user;
-    console.log('current user set as ' + user)
+  $scope.setCurrentUser = function() {
+    console.log(AuthService.isAuthenticated())
+    var userData = AuthService.isAuthenticated();
+    if (AuthService.isAuthenticated() !== null){
+      console.log(AuthService.isAuthenticated())
+      console.log('setting')
+      $rootScope.currentUser = userData.uid;
+      console.log('current user set as ' + userData.uid)
+    }
+
+
   };
+
+  $scope.setCurrentUser();
 
   // Form data for the login modal
   $scope.loginData = {};
@@ -20,6 +29,9 @@ angular.module('Beacon.controllers', [])
     scope: $scope
   }).then(function(modal) {
     $scope.modal = modal;
+    if (AuthService.isAuthenticated()==null){
+      $scope.modal.show();
+    }
   });
 
   // Triggered in the login modal to close it
@@ -34,9 +46,9 @@ angular.module('Beacon.controllers', [])
 
   $scope.doLogin = function (credentials) {
     AuthService.login($scope.loginData)
-    .then(function(user) {
+    .then(function(authData) {
       $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
-      $scope.setCurrentUser(user);
+      $scope.setCurrentUser();
       $scope.modal.hide();
       $scope.loginData.password = null;
     }, function (error) {
@@ -98,7 +110,11 @@ angular.module('Beacon.controllers', [])
 .controller('LoginCtrl', function ($scope) {
 })
 
-.controller('ProfileCtrl', function($scope) {
+.controller('ProfileCtrl', function($scope, apiFactory) {
+  $scope.profile = apiFactory.getProfile();
+  $scope.save = function(){
+    apiFactory.saveProfile($scope.profile)
+  }
 })
 
 .controller('RequestsCtrl', function($scope, $filter, apiFactory) {

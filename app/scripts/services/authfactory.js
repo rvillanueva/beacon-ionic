@@ -19,7 +19,6 @@ angular.module('Beacon')
   var login = function(credentials){
     var deferred = $q.defer();
     // Keep the factory function but need to change authentication system below
-    console.log('initiated')
     ref.authWithPassword({
       email    : credentials.username,
       password : credentials.password
@@ -39,7 +38,7 @@ angular.module('Beacon')
             console.log('Added to user database')
           }
         });
-        deferred.resolve('good!');
+        deferred.resolve(authData);
         console.log('sent promise');
       }
     });
@@ -47,20 +46,22 @@ angular.module('Beacon')
   }
 
   var isAuthenticated = function(){
+    // Check if user is authenticated
     var authData = ref.getAuth();
     if (authData) {
+      // If the user is authenticated, return users auth data
       return authData
+    } else {
+      // Else return null
+      return null
     }
-  }
-
-  var logout = function(){
-
   }
 
   return {
     login: login,
     logout: function(){
       ref.unauth();
+      console.log('Logged out.')
     },
     isAuthenticated: isAuthenticated
   }
