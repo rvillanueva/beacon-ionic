@@ -32,43 +32,44 @@ angular.module('Beacon.controllers', [])
     $scope.modal.show();
   };
 
-  $scope.credentials = {
-    username: '',
-    password: ''
-  };
-
   $scope.doLogin = function (credentials) {
     AuthService.login($scope.loginData)
     .then(function(user) {
       $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
       $scope.setCurrentUser(user);
       $scope.modal.hide();
+      $scope.loginData.password = null;
     }, function (error) {
       $rootScope.$broadcast(AUTH_EVENTS.loginFailed);
       console.log('failed')
+      $scope.loginData.password = null;
     });
   };
 
-  // Form data for the login modal
-  $scope.loginData = {};
+  $scope.logout = function() {
+    AuthService.logout();
+  };
 
-  // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/addRequest.html', {
     scope: $scope
   }).then(function(modal) {
     $scope.beaconModal = modal;
   });
 
-  // Triggered in the login modal to close it
   $scope.closeBeacon = function() {
     $scope.beaconModal.hide();
   },
 
-  // Open the login modal
   $scope.addBeacon = function() {
     $scope.beaconModal.show();
     console.log('showing modal')
   };
+
+  $rootScope.$on('$stateChangeStart', function (event, next) {
+    if (AuthService.isAuthenticated()==null){
+      $scope.login();
+    }
+  });
 
 })
 

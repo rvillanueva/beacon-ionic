@@ -35,7 +35,7 @@ angular.module('Beacon', ['ionic', 'config', 'Beacon.controllers','Beacon.filter
   all: '*',
   admin: 'admin',
   editor: 'editor',
-  guest: 'guest'
+  user: 'user'
 })
 
 .config(function($stateProvider, $urlRouterProvider) {

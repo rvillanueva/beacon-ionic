@@ -46,9 +46,23 @@ angular.module('Beacon')
     return deferred.promise;
   }
 
+  var isAuthenticated = function(){
+    var authData = ref.getAuth();
+    if (authData) {
+      return authData
+    }
+  }
+
+  var logout = function(){
+
+  }
 
   return {
-    login: login
+    login: login,
+    logout: function(){
+      ref.unauth();
+    },
+    isAuthenticated: isAuthenticated
   }
 
 });

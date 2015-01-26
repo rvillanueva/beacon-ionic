@@ -5,13 +5,13 @@
   <ion-content class="has-header">
     <div class="row row-center centered">
       <div class="col col-center">
-        I am <button class="button" ng-class="beaconStyle" ng-click="toggleResponder()">
-          {{beacon === true ? 'ready' : 'not ready'}}
-        </button> to help<br><br>
-        Need help?<br><br>
+        <button class="button big" ng-class="beaconStyle" ng-click="toggleResponder()">
+          {{beacon === true ? 'READY' : 'NOT READY'}}
+        </button><br>to help<br><br><br>
         <button class="button button-positive" ng-click="addBeacon()">
-          <i class="icon ion-fireball"></i> Light Beacon
-        </button>
+        <i class="icon ion-fireball"></i>
+        </button><br>
+        REQUEST HELP
       </div>
     </div>
   </ion-content>
