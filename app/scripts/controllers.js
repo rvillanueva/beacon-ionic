@@ -130,10 +130,13 @@ angular.module('Beacon.controllers', [])
 .controller('LoginCtrl', function ($scope) {
 })
 
-.controller('ProfileCtrl', function($scope, apiFactory) {
+.controller('ProfileCtrl', function($scope, $location, apiFactory) {
   apiFactory.getProfile().then(function(data){
     $scope.profile = data;
   })
+  $scope.goQuestions = function(){
+    $location.path('app/profile/questions')
+  }
   $scope.saveProfile = function(){
     var profileSave = {};
     if (typeof $scope.profile.role !== "undefined"){
@@ -158,10 +161,24 @@ angular.module('Beacon.controllers', [])
 })
 
 .controller('QuestionsCtrl', function($scope, $filter, apiFactory) {
-  $scope.requests = apiFactory.myRequests();
+  apiFactory.getQuestions().then(function(data){
+    $scope.questions = data;
+  })
 })
 
-.controller('QuestionCtrl', function($scope) {
+.controller('QuestionCtrl', function($scope, $location, $stateParams, $timeout, apiFactory) {
+  $scope.params = $stateParams;
+  $scope.question = apiFactory.getQuestion($scope.params.questionId);
+  apiFactory.getResponses($scope.params.questionId).then(function(data){
+    $scope.responses = data;
+  });
+  $scope.saveResponse = function(questionId, responseId){
+    console.log(questionId, responseId);
+    $location.path('app/profile/questions/uid2')
+  }
+  $scope.navBack = function(){
+    $location.path('app/profile/questions')
+  }
 })
 
 
