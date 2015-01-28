@@ -161,13 +161,13 @@ angular.module('Beacon.controllers', [])
 })
 
 .controller('QuestionsCtrl', function($scope, $filter, apiFactory) {
-  apiFactory.getQuestions().then(function(data){
+  apiFactory.getQuestionsAnswered().then(function(data){
     $scope.questions = data;
   })
+
 })
 
-.controller('QuestionCtrl', function($scope, $location, $stateParams, $timeout, apiFactory) {
-  $scope.params = $stateParams;
+.controller('QuestionCtrl', function($scope, $location, apiFactory) {
   $scope.question = apiFactory.getQuestion($scope.params.questionId);
   apiFactory.getResponses($scope.params.questionId).then(function(data){
     $scope.responses = data;

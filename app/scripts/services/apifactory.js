@@ -12,6 +12,9 @@ angular.module('Beacon')
 
     var ref = new Firebase("https://ibmbeacon.firebaseio.com/");
 
+    var responseSync = $firebase(ref.child('responses'));
+    var responseKey = responseSync.$asObject();
+
     // Public API here
     // Dev Team: will need to rewrite for IBM backend
     return {
@@ -37,6 +40,10 @@ angular.module('Beacon')
         var sync = $firebase(ref.child('traitKey').child(type));
         var traitKey = sync.$asObject();
         return traitKey;
+      },
+      responseKey: function(type){
+        // Returns JSON object with list of industry keys and names. Example: "industry" or "service"
+        return responseKey[type];
       },
       self: function(){
         return '';
@@ -92,70 +99,47 @@ angular.module('Beacon')
         //rank rankProfile across all profiles
         return 'Error';
       },
-      getQuestions: function(){
-        // Returns JSON object with list of questions the user has answered
+      getQuestionsAnswered: function(){
+        // Returns JSON object responses user has made with attached question text and response values
         var deferred = $q.defer();
-        var responses;
         ref.child('users').child($rootScope.currentUser).child('responses').once('value', function(dataSnapshot) {
-          responses = dataSnapshot.val();
-          console.log(responses)
+          var userResponses = dataSnapshot.val();
+          console.log(userResponses)
           ref.child('questions').once('value', function(qDataSnapshot) {
             var questions = qDataSnapshot.val();
             console.log(questions)
-            angular.forEach(responses, function(value, key) {
-              responses[key] = questions[key].text;
-              deferred.resolve(responses)
+            angular.forEach(userResponses, function(value, key) {
+              var output = {};
+              output[key] = {};
+              output[key].value = value;
+              output[key].text = questions[key].text;
+              output[key].responses = responseKey[questions[key].responses]
+              console.log(output)
+              deferred.resolve(output)
             });
           });
-
         });
-        //var responsesSync = $firebase(ref.child('users').child($rootScope.currentUser).child('responses'));
-        //var responses = responsesSync.$asArray();
-        //var questionsSync = $firebase(ref.child('questions'));
-        //var questions = questionsSync.$asObject();
-
-        console.log(responses)
         return deferred.promise;
       },
       getQuestion: function(id){
-        // Returns JSON object with list of industry keys and names. Example: "industry" or "service"
+        // Returns list of all questions
         var sync = $firebase(ref.child('questions').child(id));
         var question = sync.$asObject();
         return question;
       },
       getResponses: function(id){
-        // Returns JSON object with list of industry keys and names. Example: "industry" or "service"
-        //var responseRef = ref.child('questions');
+        // Returns response for specific question ID
         var deferred = $q.defer();
-        var responses;
         ref.child('questions').child(id).once('value', function(dataSnapshot) {
-          // store dataSnapshot for use in below examples.
-          var questionSnap = dataSnapshot;
-          var question = questionSnap.val();
-          console.log(question)
+          var question = dataSnapshot.val();
           var sync = $firebase(ref.child('responses').child(question.responses));
-          responses = sync.$asObject();
-          console.log(responses)
+          var responses = sync.$asObject();
           deferred.resolve(responses)
         });
         return deferred.promise;
       },
       saveResponse: function(questionId, responseId){
-        // Returns JSON object with list of industry keys and names. Example: "industry" or "service"
-        //var responseRef = ref.child('questions');
-        var deferred = $q.defer();
-        var responses;
-        ref.child('questions').child(id).once('value', function(dataSnapshot) {
-          // store dataSnapshot for use in below examples.
-          var questionSnap = dataSnapshot;
-          var question = questionSnap.val();
-          console.log(question)
-          var sync = $firebase(ref.child('responses').child(question.responses));
-          responses = sync.$asObject();
-          console.log(responses)
-          deferred.resolve(responses)
-        });
-        return deferred.promise;
+        ref.child('users').child($rootScope.currentUser).child('responses').child(questionId).update(responseId);
       },
       ready: function(toggle){
         // Readies individual profile to accept requests

@@ -1,10 +1,26 @@
-<ion-view title="Questions">
+
+<ion-view title="Answers">
+  <ion-nav-buttons side="right">
+    <button class="button button-icon icon ion-plus"></button>
+  </ion-nav-buttons>
   <ion-content class="has-header">
+    <button class="button button-full button-positive">
+      Answer Questions
+    </button>
     <ion-list>
-      <ion-item class="item-icon-right" ng-repeat="(key,question) in questions" href="#/app/profile/questions/{{key}}">
-        {{question}}
-        <i class="icon ion-chevron-right icon-accessory"></i>
-      </ion-item>
+      <div ng-repeat="(key,question) in questions">
+        <ion-item class="item item-divider">
+            {{question.text}}
+        </ion-item>
+        <label class="item item-input item-select">
+          <div class="input-label">
+            Answer
+          </div>
+          <select ng-model="questions[key].value" ng-options="rKey*1 as response for (rKey, response) in question.responses">
+          </select>
+        </label>
+        <br>
+      </div>
     </ion-list>
   </ion-content>
 </ion-view>
