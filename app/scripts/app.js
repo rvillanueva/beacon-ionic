@@ -105,6 +105,25 @@ angular.module('Beacon', ['ionic', 'config', 'Beacon.controllers','Beacon.filter
         }
       }
     })
+    .state('app.questions', {
+      url: '/profile/questions',
+      views: {
+        'menuContent' :{
+          templateUrl: 'templates/questions.html',
+          controller: 'QuestionsCtrl'
+        }
+      }
+    })
+    .state('app.question', {
+      url: '/profile/questions/:questionId',
+      views: {
+        'menuContent' :{
+          templateUrl: 'templates/question.html',
+          controller: 'QuestionCtrl'
+        }
+      }
+    })
+
 
     .state('app.login', {
       url: '/login',

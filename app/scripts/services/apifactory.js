@@ -8,7 +8,7 @@
  * Factory in the beaconApp.
  */
 angular.module('Beacon')
-  .factory('apiFactory', function ($rootScope, $firebase, AuthService) {
+  .factory('apiFactory', function ($rootScope, $firebase, $q, AuthService) {
 
     var ref = new Firebase("https://ibmbeacon.firebaseio.com/");
 
@@ -67,14 +67,17 @@ angular.module('Beacon')
         return newRequestId;
       },
       getProfile: function(){
+        var deferred = $q.defer();
         if (AuthService.isAuthenticated() !== null){
           var userId = $rootScope.currentUser;
           var sync = $firebase(ref.child('users').child(userId).child('profile'));
           var profile = sync.$asObject();
-          return profile;
+          deferred.resolve(profile);
         } else {
-          return 'Error getting profile'
+          console.log('Error getting profile');
+          deferred.reject('Error getting profile');
         }
+        return deferred.promise;
       },
       saveProfile: function(data){
         var userId = $rootScope.currentUser;

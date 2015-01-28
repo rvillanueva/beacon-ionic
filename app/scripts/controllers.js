@@ -13,10 +13,12 @@ angular.module('Beacon.controllers', [])
       console.log(AuthService.isAuthenticated())
       console.log('setting')
       $rootScope.currentUser = userData.uid;
-      $scope.currentUserProfile = apiFactory.getProfile();
+      apiFactory.getProfile().then(function(data){
+        $scope.currentUserProfile = data;
+      })
+
       console.log('current user set as ' + userData.uid)
     }
-
 
   };
 
@@ -87,12 +89,29 @@ angular.module('Beacon.controllers', [])
 })
 
 .controller('HomeCtrl', function($scope, apiFactory) {
-  $scope.beacon = false;
-  if ($scope.beacon){
-    $scope.beaconStyle = 'button-positive';
-  } else {
-    $scope.beaconStyle = 'button-light';
+  apiFactory.getProfile().then(function(data){
+    // isn't passing attributes correctly
+    $scope.setBeacon(data)
+    console.log('passed ' + data.ready)
+  }, function(reason){
+    console.log('Failed: ' + reason)
+  });
+
+  $scope.setBeacon = function(profile){
+    $scope.beacon = profile.ready;
+    console.log(profile)
+    console.log(profile.ready)
+
+    if (typeof $scope.beacon == "undefined"){
+      $scope.beacon = false;
+      apiFactory.ready('false')
+    } else if ($scope.beacon){
+      $scope.beaconStyle = 'button-positive';
+    } else {
+      $scope.beaconStyle = 'button-light';
+    }
   }
+
   $scope.firstResponder = function(){
   };
   $scope.toggleResponder = function(){
@@ -112,7 +131,9 @@ angular.module('Beacon.controllers', [])
 })
 
 .controller('ProfileCtrl', function($scope, apiFactory) {
-  $scope.profile = apiFactory.getProfile();
+  apiFactory.getProfile().then(function(data){
+    $scope.profile = data;
+  })
   $scope.saveProfile = function(){
     var profileSave = {};
     if (typeof $scope.profile.role !== "undefined"){
@@ -134,6 +155,13 @@ angular.module('Beacon.controllers', [])
 })
 
 .controller('RequestCtrl', function($scope) {
+})
+
+.controller('QuestionsCtrl', function($scope, $filter, apiFactory) {
+  $scope.requests = apiFactory.myRequests();
+})
+
+.controller('QuestionCtrl', function($scope) {
 })
 
 
