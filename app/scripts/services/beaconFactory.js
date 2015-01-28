@@ -2,9 +2,9 @@
 
 /**
  * @ngdoc service
- * @name beaconApp.apiFactory
+ * @name Beacon.beaconFactory
  * @description
- * # apiFactory
+ * # beaconFactory
  * Factory in the beaconApp.
  */
 angular.module('Beacon')

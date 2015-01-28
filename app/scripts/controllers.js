@@ -2,7 +2,7 @@
 angular.module('Beacon.controllers', [])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, USER_ROLES,
-  AuthService, $location, $rootScope, AUTH_EVENTS) {
+  AuthService, $location, $rootScope, apiFactory, AUTH_EVENTS) {
 
   $scope.userRoles = USER_ROLES;
 
@@ -13,6 +13,7 @@ angular.module('Beacon.controllers', [])
       console.log(AuthService.isAuthenticated())
       console.log('setting')
       $rootScope.currentUser = userData.uid;
+      $scope.currentUserProfile = apiFactory.getProfile();
       console.log('current user set as ' + userData.uid)
     }
 
@@ -112,8 +113,19 @@ angular.module('Beacon.controllers', [])
 
 .controller('ProfileCtrl', function($scope, apiFactory) {
   $scope.profile = apiFactory.getProfile();
-  $scope.save = function(){
-    apiFactory.saveProfile($scope.profile)
+  $scope.saveProfile = function(){
+    var profileSave = {};
+    if (typeof $scope.profile.role !== "undefined"){
+      profileSave.role = $scope.profile.role;
+    };
+    if (typeof $scope.profile.location !== "undefined"){
+      profileSave.location = $scope.profile.location
+    };
+    if (typeof $scope.profile.about !== "undefined"){
+      profileSave.about = $scope.profile.about
+    };
+    console.log(profileSave)
+    apiFactory.saveProfile(profileSave)
   }
 })
 

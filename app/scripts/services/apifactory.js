@@ -8,7 +8,7 @@
  * Factory in the beaconApp.
  */
 angular.module('Beacon')
-  .factory('apiFactory', function ($rootScope, $firebase, AuthService, beaconFactory) {
+  .factory('apiFactory', function ($rootScope, $firebase, AuthService) {
 
     var ref = new Firebase("https://ibmbeacon.firebaseio.com/");
 
@@ -63,7 +63,7 @@ angular.module('Beacon')
         var newRequest = ref.child('requests').push(request);
         var newRequestId = newRequest.key();
         console.log(newRequestId)
-        beaconFactory.request(request)
+        //beaconFactory.request(request)
         return newRequestId;
       },
       getProfile: function(){
@@ -78,7 +78,7 @@ angular.module('Beacon')
       },
       saveProfile: function(data){
         var userId = $rootScope.currentUser;
-        ref.child('users').child(userId).child('profile').set(data)
+        ref.child('users').child(userId).child('profile').update(data)
       },
       rankProfile: function(project){
         //write matching function here
