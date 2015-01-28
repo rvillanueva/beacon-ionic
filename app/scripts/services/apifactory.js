@@ -28,13 +28,6 @@ angular.module('Beacon')
         var user = sync.$asObject();
         return user;
       },
-      projects: function () {
-        // Returns a list of all project names
-        return '';
-      },
-      project: function (id) {
-        return '';
-      },
       traitKey: function(type){
         // Returns JSON object with list of industry keys and names. Example: "industry" or "service"
         var sync = $firebase(ref.child('traitKey').child(type));
@@ -44,9 +37,6 @@ angular.module('Beacon')
       responseKey: function(type){
         // Returns JSON object with list of industry keys and names. Example: "industry" or "service"
         return responseKey[type];
-      },
-      self: function(){
-        return '';
       },
       myRequests: function(){
         //need to filter for owned
@@ -121,11 +111,23 @@ angular.module('Beacon')
         });
         return deferred.promise;
       },
-      getQuestion: function(id){
-        // Returns list of all questions
-        var sync = $firebase(ref.child('questions').child(id));
-        var question = sync.$asObject();
-        return question;
+      getNextQuestion: function(){
+        // Returns the next unanswered question
+        var next = 'uid' // testing, need to insert next calculator
+        var deferred = $q.defer();
+        ref.child('questions').child(next).once('value', function(dataSnapshot) {
+          var question = dataSnapshot.val();
+          console.log(question)
+          // Add conditional if values are in question
+          var responseType = question.responses;
+          responseKey = responseSync.$asObject();
+          delete question.responses;
+          question.responses = responseKey["lickert"];
+//          question.uid = next;
+          console.log(responseKey)
+          deferred.resolve(question);
+        });
+        return deferred.promise;
       },
       getResponses: function(id){
         // Returns response for specific question ID

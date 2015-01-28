@@ -105,12 +105,12 @@ angular.module('Beacon', ['ionic', 'config', 'Beacon.controllers','Beacon.filter
         }
       }
     })
-    .state('app.questions', {
-      url: '/profile/questions',
+    .state('app.answers', {
+      url: '/profile/answers',
       views: {
         'menuContent' :{
-          templateUrl: 'templates/questions.html',
-          controller: 'QuestionsCtrl'
+          templateUrl: 'templates/answers.html',
+          controller: 'AnswersCtrl'
         }
       }
     })

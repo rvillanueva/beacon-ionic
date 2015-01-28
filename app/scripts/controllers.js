@@ -80,6 +80,22 @@ angular.module('Beacon.controllers', [])
     console.log('showing modal')
   };
 
+  // Add Answer Modal
+
+  $ionicModal.fromTemplateUrl('templates/addAnswer.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.answerModal = modal;
+  });
+
+  $scope.closeAnswer = function() {
+    $scope.answerModal.hide();
+  },
+
+  $scope.addAnswer = function() {
+    $scope.answerModal.show();
+  };
+
   $rootScope.$on('$stateChangeStart', function (event, next) {
     if (AuthService.isAuthenticated()==null){
       $scope.login();
@@ -134,8 +150,8 @@ angular.module('Beacon.controllers', [])
   apiFactory.getProfile().then(function(data){
     $scope.profile = data;
   })
-  $scope.goQuestions = function(){
-    $location.path('app/profile/questions')
+  $scope.goAnswers = function(){
+    $location.path('app/profile/answers')
   }
   $scope.saveProfile = function(){
     var profileSave = {};
@@ -160,24 +176,18 @@ angular.module('Beacon.controllers', [])
 .controller('RequestCtrl', function($scope) {
 })
 
-.controller('QuestionsCtrl', function($scope, $filter, apiFactory) {
+.controller('AnswersCtrl', function($scope, $filter, apiFactory) {
   apiFactory.getQuestionsAnswered().then(function(data){
     $scope.questions = data;
   })
-
 })
 
-.controller('QuestionCtrl', function($scope, $location, apiFactory) {
-  $scope.question = apiFactory.getQuestion($scope.params.questionId);
-  apiFactory.getResponses($scope.params.questionId).then(function(data){
-    $scope.responses = data;
-  });
+.controller('AddAnswerCtrl', function($scope, $location, apiFactory) {
+  apiFactory.getNextQuestion('uid').then(function(data){
+    $scope.question = data;
+  })
   $scope.saveResponse = function(questionId, responseId){
     console.log(questionId, responseId);
-    $location.path('app/profile/questions/uid2')
-  }
-  $scope.navBack = function(){
-    $location.path('app/profile/questions')
   }
 })
 
