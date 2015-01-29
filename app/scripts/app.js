@@ -115,11 +115,11 @@ angular.module('Beacon', ['ionic', 'config', 'Beacon.controllers','Beacon.filter
       }
     })
     .state('app.question', {
-      url: '/profile/questions/:questionId',
+      url: '/profile/answers/add',
       views: {
         'menuContent' :{
-          templateUrl: 'templates/question.html',
-          controller: 'QuestionCtrl'
+          templateUrl: 'templates/addAnswer.html',
+          controller: 'AddAnswerCtrl'
         }
       }
     })

@@ -80,22 +80,6 @@ angular.module('Beacon.controllers', [])
     console.log('showing modal')
   };
 
-  // Add Answer Modal
-
-  $ionicModal.fromTemplateUrl('templates/addAnswer.html', {
-    scope: $scope
-  }).then(function(modal) {
-    $scope.answerModal = modal;
-  });
-
-  $scope.closeAnswer = function() {
-    $scope.answerModal.hide();
-  },
-
-  $scope.addAnswer = function() {
-    $scope.answerModal.show();
-  };
-
   $rootScope.$on('$stateChangeStart', function (event, next) {
     if (AuthService.isAuthenticated()==null){
       $scope.login();
@@ -176,10 +160,13 @@ angular.module('Beacon.controllers', [])
 .controller('RequestCtrl', function($scope) {
 })
 
-.controller('AnswersCtrl', function($scope, $filter, apiFactory) {
+.controller('AnswersCtrl', function($scope, $filter, $location, apiFactory) {
   apiFactory.getQuestionsAnswered().then(function(data){
     $scope.questions = data;
-  })
+  });
+  $scope.addAnswer = function(){
+    $location.path('app/profile/answers/add');
+  }
 })
 
 .controller('AddAnswerCtrl', function($scope, $location, apiFactory) {
@@ -187,6 +174,9 @@ angular.module('Beacon.controllers', [])
     $scope.question = data;
     console.log('question result');
   })
+  $scope.closeAnswer = function(){
+    $location.path('app/profile/answers');
+  }
   $scope.saveResponse = function(questionId, responseId){
     apiFactory.saveResponse(questionId, responseId);
     apiFactory.getNextQuestion().then(function(data){

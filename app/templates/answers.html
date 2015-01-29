@@ -1,4 +1,3 @@
-
 <ion-view title="Answers">
   <ion-nav-buttons side="right">
     <button class="button button-icon icon ion-plus" ng-click="addAnswer()"></button>
@@ -16,7 +15,7 @@
           <div class="input-label">
             Answer
           </div>
-          <select ng-model="question.value" ng-options="rKey*1 as response for (rKey, response) in question.responses">
+          <select ng-model="question.value" ng-options="rKey as response for (rKey, response) in question.responses">
           </select>
         </label>
         <br>
