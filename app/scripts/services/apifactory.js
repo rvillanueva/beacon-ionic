@@ -82,7 +82,8 @@ angular.module('Beacon')
         ref.child('users').child(userId).child('profile').update(data)
       },
       rankProfile: function(project){
-        //write matching function here
+        // Return ranks of profiles
+        // write matching function here -- should really be server-side logic
         return 'Error';
       },
       rankProfiles: function(project){
@@ -94,17 +95,14 @@ angular.module('Beacon')
         var deferred = $q.defer();
         ref.child('users').child($rootScope.currentUser).child('responses').once('value', function(dataSnapshot) {
           var userResponses = dataSnapshot.val();
-          console.log(userResponses)
           ref.child('questions').once('value', function(qDataSnapshot) {
             var questions = qDataSnapshot.val();
-            console.log(questions)
             angular.forEach(userResponses, function(value, key) {
               var output = {};
               output[key] = {};
               output[key].value = value;
               output[key].text = questions[key].text;
               output[key].responses = responseKey[questions[key].responses]
-              console.log(output)
               deferred.resolve(output)
             });
           });
@@ -113,35 +111,54 @@ angular.module('Beacon')
       },
       getNextQuestion: function(){
         // Returns the next unanswered question
-        var next = 'uid' // testing, need to insert next calculator
         var deferred = $q.defer();
-        ref.child('questions').child(next).once('value', function(dataSnapshot) {
-          var question = dataSnapshot.val();
-          console.log(question)
-          // Add conditional if values are in question
-          var responseType = question.responses;
-          responseKey = responseSync.$asObject();
-          delete question.responses;
-          question.responses = responseKey["lickert"];
-//          question.uid = next;
-          console.log(responseKey)
-          deferred.resolve(question);
-        });
-        return deferred.promise;
-      },
-      getResponses: function(id){
-        // Returns response for specific question ID
-        var deferred = $q.defer();
-        ref.child('questions').child(id).once('value', function(dataSnapshot) {
-          var question = dataSnapshot.val();
-          var sync = $firebase(ref.child('responses').child(question.responses));
-          var responses = sync.$asObject();
-          deferred.resolve(responses)
-        });
+        ref.child('users').child($rootScope.currentUser).child('responses').once('value', function(uDataSnapshot) {
+          var userResponses = uDataSnapshot.val();
+          console.log('userResponses:')
+          console.log(userResponses)
+          // Return list of questions ordered by 'order'
+          ref.child('questions').orderByChild('order').once('value', function(qDataSnapshot) {
+            var questionData = qDataSnapshot.val();
+            console.log('questionData:')
+            console.log(questionData)
+            // Run through each question and stop when there's one the user hasn't responded to
+            var keepGoing = true;
+            var next;
+            if (userResponses !== null){
+              angular.forEach(questionData, function(value, key) {
+                if (typeof userResponses[key] == "undefined" && keepGoing){
+                  next = key;
+                  keepGoing = false;
+                }
+                console.log(next)
+              });
+            } else {
+              angular.forEach(questionData, function(value, key) {
+                if (value.order == 0){
+                  next = key;
+                }
+              });
+            }
+            var question = questionData[next];
+            // Add uid onto question value
+            question.uid = next;
+            // If response options are not explicitly defined, use the responseKey
+            if (typeof question.responses == "string"){
+              var responseType = question.responses;
+              delete question.responses;
+              // Can we draw from the common variable rather than making a query every single time?
+              var sync = $firebase(ref.child('responses').child(responseType));
+              question.responses = sync.$asObject();
+            }
+            console.log('question')
+            console.log(question)
+            deferred.resolve(question);
+          })
+        })
         return deferred.promise;
       },
       saveResponse: function(questionId, responseId){
-        ref.child('users').child($rootScope.currentUser).child('responses').child(questionId).update(responseId);
+        ref.child('users').child($rootScope.currentUser).child('responses').child(questionId).set(responseId);
       },
       ready: function(toggle){
         // Readies individual profile to accept requests

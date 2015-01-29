@@ -183,11 +183,14 @@ angular.module('Beacon.controllers', [])
 })
 
 .controller('AddAnswerCtrl', function($scope, $location, apiFactory) {
-  apiFactory.getNextQuestion('uid').then(function(data){
+  apiFactory.getNextQuestion().then(function(data){
     $scope.question = data;
   })
   $scope.saveResponse = function(questionId, responseId){
-    console.log(questionId, responseId);
+    apiFactory.saveResponse(questionId, responseId);
+    apiFactory.getNextQuestion().then(function(data){
+      $scope.question = data;
+    })
   }
 })
 

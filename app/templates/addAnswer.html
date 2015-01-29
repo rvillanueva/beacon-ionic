@@ -9,7 +9,7 @@
     <div class="padding">
       <h3>{{question.text}}</h3>
     </div>
-    <button class="button button-full button-light" ng-repeat="(key, response) in question.responses" ng-click="saveResponse(params.questionId, key)">
+    <button class="button button-full button-light" ng-repeat="(key, response) in question.responses" ng-click="saveResponse(question.uid, key)">
       {{response}}
     </button>
   </ion-content>
