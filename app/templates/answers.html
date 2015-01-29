@@ -16,7 +16,7 @@
           <div class="input-label">
             Answer
           </div>
-          <select ng-model="questions[key].value" ng-options="rKey*1 as response for (rKey, response) in question.responses">
+          <select ng-model="question.value" ng-options="rKey*1 as response for (rKey, response) in question.responses">
           </select>
         </label>
         <br>

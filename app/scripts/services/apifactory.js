@@ -95,16 +95,19 @@ angular.module('Beacon')
         var deferred = $q.defer();
         ref.child('users').child($rootScope.currentUser).child('responses').once('value', function(dataSnapshot) {
           var userResponses = dataSnapshot.val();
+          console.log('user responses')
+          console.log(userResponses)
           ref.child('questions').once('value', function(qDataSnapshot) {
             var questions = qDataSnapshot.val();
+            var output = {};
             angular.forEach(userResponses, function(value, key) {
-              var output = {};
               output[key] = {};
               output[key].value = value;
               output[key].text = questions[key].text;
               output[key].responses = responseKey[questions[key].responses]
-              deferred.resolve(output)
             });
+            console.log(output)
+            deferred.resolve(output)
           });
         });
         return deferred.promise;
@@ -114,13 +117,9 @@ angular.module('Beacon')
         var deferred = $q.defer();
         ref.child('users').child($rootScope.currentUser).child('responses').once('value', function(uDataSnapshot) {
           var userResponses = uDataSnapshot.val();
-          console.log('userResponses:')
-          console.log(userResponses)
           // Return list of questions ordered by 'order'
-          ref.child('questions').orderByChild('order').once('value', function(qDataSnapshot) {
+          ref.child('questions').once('value', function(qDataSnapshot) {
             var questionData = qDataSnapshot.val();
-            console.log('questionData:')
-            console.log(questionData)
             // Run through each question and stop when there's one the user hasn't responded to
             var keepGoing = true;
             var next;
@@ -130,7 +129,6 @@ angular.module('Beacon')
                   next = key;
                   keepGoing = false;
                 }
-                console.log(next)
               });
             } else {
               angular.forEach(questionData, function(value, key) {
@@ -139,19 +137,22 @@ angular.module('Beacon')
                 }
               });
             }
-            var question = questionData[next];
-            // Add uid onto question value
-            question.uid = next;
-            // If response options are not explicitly defined, use the responseKey
-            if (typeof question.responses == "string"){
-              var responseType = question.responses;
-              delete question.responses;
-              // Can we draw from the common variable rather than making a query every single time?
-              var sync = $firebase(ref.child('responses').child(responseType));
-              question.responses = sync.$asObject();
+            var question;
+            if (next) {
+              question = questionData[next];
+              // Add uid onto question value
+              question.uid = next;
+              // If response options are not explicitly defined, use the responseKey
+              if (typeof question.responses == "string"){
+                var responseType = question.responses;
+                delete question.responses;
+                // Can we draw from the common variable rather than making a query every single time?
+                var sync = $firebase(ref.child('responses').child(responseType));
+                question.responses = sync.$asObject();
+              }
+            } else {
+              question = null
             }
-            console.log('question')
-            console.log(question)
             deferred.resolve(question);
           })
         })

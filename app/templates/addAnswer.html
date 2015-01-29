@@ -6,11 +6,16 @@
     </div>
   </ion-header-bar>
   <ion-content class="has-header">
-    <div class="padding">
-      <h3>{{question.text}}</h3>
+    <div ng-if="question">
+      <div class="padding">
+        <h3>{{question.text}}</h3>
+      </div>
+      <button class="button button-full button-light" ng-repeat="(key, response) in question.responses" ng-click="saveResponse(question.uid, key)">
+        {{response}}
+      </button>
     </div>
-    <button class="button button-full button-light" ng-repeat="(key, response) in question.responses" ng-click="saveResponse(question.uid, key)">
-      {{response}}
-    </button>
+    <div ng-if="!question">
+      <h3>You've answered all the questions, you rockstar you.</h3>
+    </div>
   </ion-content>
 </div>
