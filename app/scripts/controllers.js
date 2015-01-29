@@ -134,6 +134,10 @@ angular.module('Beacon.controllers', [])
   apiFactory.getProfile().then(function(data){
     $scope.profile = data;
   })
+  apiFactory.getQuestionsAnswered().then(function(data){
+    var questions = data;
+    $scope.questionCount = Object.keys(questions).length
+  });
   $scope.goAnswers = function(){
     $location.path('app/profile/answers')
   }
